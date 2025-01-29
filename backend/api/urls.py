@@ -9,4 +9,5 @@ urlpatterns = [
     path("user_books/read/", views.ReadListView.as_view(), name="read-list"),
     path("user_books/", views.UserBookListView.as_view(), name="user-books"),
     path("user/register/", views.CreateUserView.as_view(), name="register-user"),
+    path("books/search/", views.GoogleBooksSearchView.as_view(), name="search-books"),
 ]
