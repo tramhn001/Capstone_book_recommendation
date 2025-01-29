@@ -5,7 +5,44 @@ from .serializers import UserSerializer, BookSerializer, UserBookSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Book, UserBook
 from rest_framework.exceptions import PermissionDenied
+import requests
+from django.conf import settings
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
+# View for searching book
+class GoogleBooksSearchView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        query = request.query_params.get('q', '')
+        if not query:
+            return Response({"error": "Query parameter 'q' is required"})
+        
+        google_books_api_url = "https://www.googleapis.com/books/v1/volumes"
+        params = {
+            "q": query,
+            "key": settings.GOOGLE_BOOKS_API_KEY,
+            "maxResults": 10 # Limit the number of results
+        }
+
+        response = requests.get(google_books_api_url, params=params)
+        if response.status_code == 200:
+            books = response.json().get('items', [])
+            results = []
+            for book in books:
+                volume_info = book.get('volumeInfo', {})
+                results.append({
+                    "google_book_id": book.get("id"),
+                    "title": volume_info.get("title"),
+                    "author": ", ".join(volume_info.get("authors", [])),
+                    "published_date": volume_info.get("publishedDate"),
+                    "description": volume_info.get("description"),
+                    "cover_image": volume_info.get("imageLinks", {}).get("thumbnail"),
+                })
+            return Response(results)
+        return Response({"error": "Failed to fetch data from Google Books API"}, status=response.status_code)
+    
 # View to list and create books
 class BookListCreate(generics.ListCreateAPIView):
     serializer_class = BookSerializer

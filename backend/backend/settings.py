@@ -158,3 +158,4 @@ DATABASES = {
     }
 }
 
+GOOGLE_BOOKS_API_KEY = "AIzaSyCq7UR6QbNhPHthgZZMLZdxtqyvksnquV8"
