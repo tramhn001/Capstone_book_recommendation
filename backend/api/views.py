@@ -24,14 +24,13 @@ class LoginView(APIView):
         if not email or not password:
             return Response({"error": "Email and password are required"}, status=400)
         
-        user = authenticate(username=email, password=password)
-
-        if user is not None:
+        user = User.objects.filter(email=email).first()
+        if user and user.check_password(password):
             refresh = RefreshToken.for_user(user)
             return Response({
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
-                "username": user.username,
+                "username": user.username
             })
         else:
             return Response({"error": "Invalid credentials"}, status=401)   
@@ -53,13 +52,16 @@ def user_register(request):
     if User.objects.filter(email=data.get("email")).exists():
         return Response({"error": "Email already registered"}, status=400)
     
-    user = User.objects.create_user(
-        username=data.get("username"),
-        email=data.get("email"),
-        password=data.get("password")
-    )
+    try:
+        user = User.objects.create_user(
+            username=data.get("username"),
+            email=data.get("email"),
+            password=data.get("password")
+        )
 
-    return Response({"message": "User registered successfully"}, status=201)
+        return Response({"message": "User registered successfully"}, status=201)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
 
 # View for searching book
 class GoogleBooksSearchView(APIView):
