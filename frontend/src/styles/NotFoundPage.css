@@ -1,26 +1,99 @@
-.not-found-page {
-  text-align: center;
-	padding: 50px;
-}
-
-.book-animation {
-	margin-top: 20px;
-	max-width: 300px;
+/* Basic Reset */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+  }
+  
+  /* Container for the Not Found Page */
+  .not-found-page {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	background-color: #f4f4f4;
+	text-align: center;
+	padding: 20px;
+  }
+  
+  /* Heading style */
+  .not-found-page h1 {
+	font-size: 48px;
+	color: #333;
+	font-weight: bold;
+	margin-bottom: 15px;
+	font-family: 'Georgia', serif;
+  }
+  
+  /* Subheading text style */
+  .not-found-page p {
+	font-size: 20px;
+	color: #777;
+	margin-bottom: 30px;
+	font-family: 'Arial', sans-serif;
+  }
+  
+  /* Book animation style */
+  .book-animation {
+	width: 200px;
 	height: auto;
-}
-
-.not-found-button {
-	margin: 10px,
-	padding: 10px 20px;
+	margin-bottom: 30px;
+	animation: bookAnimation 1.5s infinite alternate;
+  }
+  
+  /* Keyframe animation for book gif */
+  @keyframes bookAnimation {
+	0% {
+	  transform: rotate(0deg);
+	}
+	100% {
+	  transform: rotate(10deg);
+	}
+  }
+  
+  /* Button style */
+  .not-found-button {
+	padding: 12px 25px;
 	font-size: 16px;
 	background-color: #007bff;
 	color: white;
 	border: none;
 	border-radius: 5px;
 	cursor: pointer;
-	transition: background-color 0.3s;
-}
-
-.not-found-button:hover {
+	transition: background-color 0.3s, transform 0.3s;
+	font-weight: bold;
+	width: 200px;
+  }
+  
+  /* Button hover effect */
+  .not-found-button:hover {
 	background-color: #0056b3;
-}
+	transform: scale(1.05);
+  }
+  
+  /* Button focus effect */
+  .not-found-button:focus {
+	outline: none;
+	box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+  }
+  
+  /* Responsive Styling for small screens */
+  @media (max-width: 600px) {
+	.not-found-page h1 {
+	  font-size: 36px;
+	}
+  
+	.not-found-page p {
+	  font-size: 18px;
+	}
+  
+	.book-animation {
+	  width: 150px;
+	}
+  
+	.not-found-button {
+	  padding: 10px 20px;
+	  font-size: 14px;
+	}
+  }

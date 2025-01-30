@@ -12,8 +12,8 @@ const RegisterForm = () => {
 	const [isLoading, setIsLoading] = React.useState(false);
 	const navigate = useNavigate();
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
+	const handleSubmit = async (event) => {
+		event.preventDefault();
 		setError("");
 
 		if (!username || !email || !password || !confirmPassword) {
@@ -29,8 +29,10 @@ const RegisterForm = () => {
 		setIsLoading(true);
 		setError("");
 
+		console.log({ username, email, password });  // Check the data being sent
+
 		try {
-			const response = await axios.post("http://localhost:8000/api/user/register", {
+			const response = await axios.post("http://localhost:8000/api/user/register/", {
 				username,
 				email,
 				password,
@@ -38,8 +40,8 @@ const RegisterForm = () => {
 
 			if (response.status === 201) {
 				// Auto login after registration
-				const loginResponse = await axios.post("http://localhost:8000/api-auth/token", {
-						email,
+				const loginResponse = await axios.post("http://localhost:8000/api/token/", {
+						username: email,
 						password,
 				});
 				
@@ -56,8 +58,8 @@ const RegisterForm = () => {
 	};
 
 	return (
-		<div className="registration-form-container">
-			<h2>Register</h2>
+		<div className="register-form-container">
+			<h2>Registration</h2>
 			{error && <p className="error-message">{error}</p>}
 			<form onSubmit={handleSubmit}>
 				<div className="form-group">
@@ -65,10 +67,12 @@ const RegisterForm = () => {
 					<input
 						type="text"
 						id="username"
+						name="username"
 						value={username}
 						onChange={(e) => setUsername(e.target.value)}
 						placeholder="Enter your username"
 						required
+						autoComplete="username"
 					/>
 				</div>
 				<div className="form-group"> 
@@ -76,10 +80,12 @@ const RegisterForm = () => {
 					<input 
 						type="email"
 						id="email"
+						name="email"
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
 						placeholder="Enter your email"
 						required
+						autoComplete="email"
 					/>
 				</div>
 				<div className="form-group">
@@ -87,10 +93,12 @@ const RegisterForm = () => {
 					<input
 						type="password"
 						id="password"
+						name="password"
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
 						placeholder="Enter your password"
 						required
+						autoComplete="new-password"
 					/>
 				</div>
 				<div className="form-group">
@@ -98,10 +106,12 @@ const RegisterForm = () => {
 					<input
 						type="password"
 						id="confirmPassword"
+						name="confirmPassword"
 						value={confirmPassword}
 						onChange={(e) => setConfirmPassword(e.target.value)}
 						placeholder="Confirm your password"
 						required
+						autoComplete="new-password"
 					/>
 				</div>
 				<button type="submit" disabled={isLoading}>
