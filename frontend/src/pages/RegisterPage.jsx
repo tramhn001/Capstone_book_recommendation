@@ -1,10 +1,12 @@
 import React from "react";
+import RegisterForm from "../components/auth/RegisterForm";
 
-const RegisterPage = ({ pageName }) => {
+
+const RegisterPage = () => {
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h2>{pageName} Page</h2>
-      <p>This page is under construction 🚧</p>
+    <div>
+      <h1>Register</h1>
+      <RegisterForm />
     </div>
   );
 };
