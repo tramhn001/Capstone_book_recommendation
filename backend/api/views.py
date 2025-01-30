@@ -1,14 +1,65 @@
-from django.shortcuts import render
 from django.contrib.auth.models import User
-from rest_framework import generics
-from .serializers import UserSerializer, BookSerializer, UserBookSerializer
+from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Book, UserBook
 from rest_framework.exceptions import PermissionDenied
-import requests
-from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from django.conf import settings
+import requests
+from django.contrib.auth import authenticate
+from rest_framework_simplejwt.tokens import RefreshToken
+
+from .serializers import UserSerializer, BookSerializer, UserBookSerializer, LoginSerializer
+from .models import Book, UserBook
+
+# User login view to accept email instead of username
+class LoginView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get("email")
+        password = request.data.get("password")
+
+        if not email or not password:
+            return Response({"error": "Email and password are required"}, status=400)
+        
+        user = authenticate(username=email, password=password)
+
+        if user is not None:
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+                "username": user.username,
+            })
+        else:
+            return Response({"error": "Invalid credentials"}, status=401)   
+    
+@api_view(["POST"])
+def user_register(request):
+    data = request.data
+
+    # Ensure all required fields are provided
+    required_fields = ["username", "email", "password"]
+    for field in required_fields:
+        if not data.get(field):
+            return Response({"error": f"{field} is required"}, status=400)
+        
+    # Check if user already exists
+    if User.objects.filter(username=data.get("username")).exists():
+        return Response({"error": "User already taken"}, status=400)
+    
+    if User.objects.filter(email=data.get("email")).exists():
+        return Response({"error": "Email already registered"}, status=400)
+    
+    user = User.objects.create_user(
+        username=data.get("username"),
+        email=data.get("email"),
+        password=data.get("password")
+    )
+
+    return Response({"message": "User registered successfully"}, status=201)
 
 # View for searching book
 class GoogleBooksSearchView(APIView):
@@ -66,7 +117,7 @@ class AddBookToList(generics.CreateAPIView):
 
         book = Book.objects.get(id=book_id)
 
-        if UserBook.objects.filter(user=self.request.user, book=book).exist():
+        if UserBook.objects.filter(user=self.request.user, book=book).exists():
             raise PermissionDenied("This book is already in your list.")
         
         serializer.save(user=self.request.user, book=book, read_status=read_status)

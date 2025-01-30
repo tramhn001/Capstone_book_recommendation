@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; // For making API requests
-import "./LoginForm.css"; // Optional: Add styles for the form
+import "../../styles/LoginForm.css"; 
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -24,7 +24,7 @@ const LoginForm = () => {
 
     try {
       // Replace with deployed API endpoint later
-      const response = await axios.post("http://localhost:8000/api-auth/token", {
+      const response = await axios.post("http://localhost:8000/api/user/login", {
         email,
         password,
       });

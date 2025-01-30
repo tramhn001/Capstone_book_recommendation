@@ -1,9 +1,11 @@
 import React from "react";
 import bookGif from "../assets/images/book-animation.gif";
-import "./NotFoundPage.css";
+import "../styles/NotFoundPage.css";
 import { useNavigate } from "react-router-dom";
 
 const NotFoundPage = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="not-found-page"> 
       <h1>404 - Page is not found</h1>
@@ -13,7 +15,9 @@ const NotFoundPage = () => {
         alt="Book animation"
         className="book-animation"
       />
-      <button onClick={() => navigate("/")}>Go to Home</button>
+      <button className="not-found-button" onClick={() => navigate("/")}>
+        Go to Home
+      </button>
     </div>
   );
 };
