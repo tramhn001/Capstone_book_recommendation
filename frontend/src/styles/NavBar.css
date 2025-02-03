@@ -1,7 +1,7 @@
-/* Navbar.css */
+Navbar.css
 
 /* Main Nav Container */
-nav {
+navbar {
     position: fixed;
     right: 0;
     top: 20%;
@@ -10,6 +10,23 @@ nav {
     padding: 20px 10px;
     border-radius: 10px 0 0 10px; /* Rounded left edge */
     box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensure it stays on top */
+}
+
+.navbar-right {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.navbar-logo img {
+    height: 100px;
+    width: auto;
+    margin-bottom: 10px;
 }
 
 /* List Styling */
@@ -60,4 +77,67 @@ li a::after {
 
 li a:hover::after {
     border-top-color: #fda085; /* Changes color on hover */
+}
+
+/* User Menu */
+.user-menu {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.user-icon {
+    font-size: 28px;
+    color: white;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.user-icon:hover {
+    opacity: 0.8;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 120px;
+    display: flex;
+    flex-direction: column;
+}
+
+.dropdown-menu a, .dropdown-menu button {
+    text-align: left;
+    padding: 10px;
+    font-size: 14px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    width: 100%;
+    color: #333;
+}
+
+.dropdown-menu a:hover, .dropdown-menu button:hover {
+    background: #f6d365;
+}
+
+/* Login Link */
+.login-link {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.login-link:hover {
+    background: #fda085;
 }

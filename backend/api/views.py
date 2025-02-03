@@ -18,9 +18,11 @@ class LoginView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        email = request.data.get("email")
+        print(request.data)
+        email = request.data.get("username") # wrong field
         password = request.data.get("password")
 
+        
         if not email or not password:
             return Response({"error": "Email and password are required"}, status=400)
         

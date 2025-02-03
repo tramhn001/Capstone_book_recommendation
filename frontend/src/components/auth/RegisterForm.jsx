@@ -29,8 +29,6 @@ const RegisterForm = () => {
 		setIsLoading(true);
 		setError("");
 
-		console.log({ username, email, password });  // Check the data being sent
-
 		try {
 			const response = await axios.post("http://localhost:8000/api/user/register/", {
 				username,
