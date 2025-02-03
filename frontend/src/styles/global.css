@@ -54,7 +54,7 @@ nav a:hover {
     display: flex;
     justify-content: flex-end;
     position: absolute;
-    top: 10px;
+    top: 29px;
     right: 20px;
     z-index: 1001;
 }

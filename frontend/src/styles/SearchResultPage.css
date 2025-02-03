@@ -6,6 +6,7 @@
     padding: 30px;
     background-color: #f4f4f4;
     min-height: 100vh;
+    padding-top: 80px;
   }
   
   /* Header and search bar styling */
@@ -27,6 +28,7 @@
     align-items: center;
     gap: 10px;
     margin-bottom: 20px;
+    margin-top: 40px;
   }
   
   .search-bar input {

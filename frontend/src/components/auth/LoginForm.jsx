@@ -24,8 +24,8 @@ const LoginForm = () => {
 
     try {
       // Replace with deployed API endpoint later
-      const response = await axios.post("http://localhost:8000/api/user/login", {
-        email,
+      const response = await axios.post("http://localhost:8000/api/user/login/", {
+        username: email,
         password,
       });
 
@@ -37,7 +37,7 @@ const LoginForm = () => {
       localStorage.setItem("refreshToken", refresh);
 
       // redirect to the user profile
-      navigate("/access/profile");
+      navigate("/profile");
     } catch (err) {
       setError(err.response?.data?.detail || "Invalid credentials. Please try again.");
     } finally {
@@ -60,6 +60,7 @@ const LoginForm = () => {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
             required
+            autoComplete="username"
           />
         </div>
         <div className="form-group">
@@ -71,6 +72,7 @@ const LoginForm = () => {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
             required
+            autoComplete="current-password"
           />
         </div>
         <button type="submit" disabled={isLoading}>

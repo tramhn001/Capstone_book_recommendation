@@ -6,7 +6,7 @@ import "../styles/Homepage.css"; // Import your homepage-specific styles
 
 const HomePage = () => {
     return (
-        <div className="container">
+        <div className="home-container">
             {/* Navbar at the top-left */}
             <Navbar />
 

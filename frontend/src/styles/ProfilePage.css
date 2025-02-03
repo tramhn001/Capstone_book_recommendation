@@ -1,0 +1,124 @@
+/* Container for the profile page */
+.profile-page-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+/* Page title */
+.profile-page-container h1 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-family: 'Georgia', serif;
+}
+
+/* Error message */
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* Search bar */
+.search-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-bar input {
+    padding: 10px;
+    font-size: 16px;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-bar button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.search-bar button:hover {
+    background-color: #0056b3;
+}
+
+/* Book lists (Read List & Want-to-Read List) */
+.read-list, .want-to-read-list {
+    margin-top: 30px;
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.read-list h2, .want-to-read-list h2 {
+    font-size: 24px;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+/* Book list items */
+.read-list ul, .want-to-read-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.read-list li, .want-to-read-list li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.read-list li:last-child, .want-to-read-list li:last-child {
+    border-bottom: none;
+}
+
+.read-list h3, .want-to-read-list h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.read-list p, .want-to-read-list p {
+    font-size: 14px;
+    color: #555;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .profile-page-container {
+        padding: 10px;
+    }
+
+    .search-bar input {
+        width: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-bar {
+        flex-direction: column;
+    }
+
+    .search-bar input {
+        width: 100%;
+    }
+
+    .search-bar button {
+        width: 100%;
+    }
+}
