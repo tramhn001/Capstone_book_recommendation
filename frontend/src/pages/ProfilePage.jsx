@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import SearchResults from "../components/book/SearchResults";
 import "../styles/ProfilePage.css";
 
 
 const ProfilePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
   const [readList, setReadList] = useState([]);
   const [wantToReadList, setWantToReadList] = useState([]);
   const [error, setError] = useState("");
@@ -26,14 +24,16 @@ const ProfilePage = () => {
   // Fetch user's Read List and Want-to-Read List
   const fetchUserLists = async () => {
 		try {
-			const response = await axios.get("http://localhost:8000/api/profile/lists/", {
+			const response = await axios.get("http://localhost:8000/api/user/lists/", {
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
 				},
 			});
+			console.log(response.data)
 			setReadList(response.data.read_list);
-			setWantToReadList(response.data.want_to_read_list);
+			setWantToReadList(response.data.want_to_read_list);			
 	} catch (err) {
+			console.log(err);
 			setError("Failed to fetch lists. Please try again.");
 		}
   };
@@ -47,37 +47,10 @@ const ProfilePage = () => {
 
 		try {
 			const response = await axios.get(`http://localhost:8000/api/books/search?query=${searchQuery}`);
+			console.log(response.data);
 			setSearchResults(response.data);
 		} catch (err) {
 			setError("Failed to fetch search results. Please try again.");
-		}
-  };
-
-  // Add book to Read List
-  const addToReadList = async (bookId) => {
-		try {
-			await axios.post(
-				"http://localhost:8000/api/profile/lists/read/",
-				{ book_id: bookId },
-				{ headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}`}}
-			);
-			fetchUserLists(); // Refresh lists
-		} catch (err) {
-			setError("Failed to add to Read List. Please try again.");
-		}
-  };
-
-  // Add book to Want-to-Read List
-  const addToWantToReadList = async (bookId) => {
-		try {
-			await axios.post(
-				"http://localhost:8000/api/profile/lists/want-to-read/",
-				{ book_id: bookId },
-				{ headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}`}}
-			);
-			fetchUserLists(); // Refresh lists
-		} catch (err) {
-			setError("Failed to add to Want-to-Read List. Please try again.");
 		}
   };
 
@@ -86,6 +59,7 @@ const ProfilePage = () => {
 			<h1>Profile Page</h1>
 			{error && <p className="error-message">{error}</p>}
 
+			
 			{/* Search Bar */}
 			<div className="search-bar">
 				<input
@@ -98,12 +72,12 @@ const ProfilePage = () => {
 			</div>
 
 			{/* Search Results */}
-			<SearchResults
+			{/* <SearchResults
 				results={searchResults}
 				isLoggedIn={true} // User is logged in
 				onAddToReadList={addToReadList}
 				onAddToWantToReadList={addToWantToReadList}
-			/>
+			/> */}
 
 			{/* Read List */}
 			<div className="read-list">
@@ -111,7 +85,7 @@ const ProfilePage = () => {
 				{readList.length > 0 ? (
 					<ul>
 						{readList.map((book) => (
-							<li key={book.id}>
+							<li key={book.book_id}>
 								<h3>{book.title}</h3>
 								<p>{book.author}</p>
 							</li>
@@ -128,10 +102,15 @@ const ProfilePage = () => {
 				{wantToReadList.length > 0 ? (
 					<ul>
 						{wantToReadList.map((book) => (
-							<li key={book.id}>
+							<li key={book.book_id} display="inline"> 
+								<img
+								src={book.thumbnail || "https://via.placeholder.com/128x193.png?text=No+Image"}
+								alt={book.title || "No Cover Available"}>									
+								</img>
 								<h3>{book.title}</h3>
-								<p>{book.author}</p>
-							</li>
+								<p>{book.author}</p>	
+								
+							</li>							
 						))}
 					</ul>
 				) : (

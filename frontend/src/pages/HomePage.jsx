@@ -1,20 +1,23 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Navbar from "../components/common/Navbar"; // Import Navbar component
+import Navbar from "../components/Navbar"; // Import Navbar component
 import "../styles/global.css"; // Ensure your global styles are imported
 import "../styles/Homepage.css"; // Import your homepage-specific styles
 
 const HomePage = () => {
+    const isLoggedIn = !!localStorage.getItem("accessToken");
     return (
         <div className="home-container">
             {/* Navbar at the top-left */}
-            <Navbar />
+            {/* <Navbar /> */}
 
-            {/* Login & SignUp Buttons at the top-right */}
-            <div className="top-right-buttons">
-                <Link to="/login" className="home-btn">Login</Link>
-                <Link to="/register" className="home-btn">Sign Up</Link>
-            </div>
+            {!isLoggedIn && (
+                <div className="top-right-buttons">
+                    <Link to="/login" className="home-btn">Login</Link>
+                    <Link to="/register" className="home-btn">Sign Up</Link>
+                </div>
+            )
+            }   
 
             {/* Main Header */}
             <header className="home-header">

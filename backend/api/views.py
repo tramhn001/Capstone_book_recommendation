@@ -10,8 +10,8 @@ import requests
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .serializers import UserSerializer, BookSerializer, UserBookSerializer, LoginSerializer
-from .models import Book, UserBook
+from .serializers import UserSerializer, BookSerializer, UserBookSerializer, LoginSerializer, ReadListSerializer, WantToReadListSerializer  
+from .models import Book, UserBook, ReadList, WantToReadList
 
 # User login view to accept email instead of username
 class LoginView(APIView):
@@ -19,7 +19,7 @@ class LoginView(APIView):
 
     def post(self, request):
         print(request.data)
-        email = request.data.get("username") # wrong field
+        email = request.data.get("username") # fix wrong field to get email instead of username
         password = request.data.get("password")
 
         
@@ -99,70 +99,103 @@ class GoogleBooksSearchView(APIView):
         return Response({"error": "Failed to fetch data from Google Books API"}, status=response.status_code)
     
 # View to list and create books
-class BookListCreate(generics.ListCreateAPIView):
-    serializer_class = BookSerializer
-    permission = [IsAuthenticated]
+# class BookListCreate(generics.ListCreateAPIView):
+#     serializer_class = BookSerializer
+#     permission = [IsAuthenticated]
 
-    def get_queryset(self):
-        user = self.request.user
-        return Book.objects.all()
+#     def get_queryset(self):
+#         user = self.request.user
+#         return Book.objects.all()
     
-    def perform_create(self, serializer):
-        serializer.save()
+#     def perform_create(self, serializer):
+#         serializer.save()
 
-# View to add a book to user's to-read or read list
-class AddBookToList(generics.CreateAPIView):
-    serializer_class = UserBookSerializer
-    permission_classes = [IsAuthenticated]
+# # View to add a book to user's to-read or read list
+# class AddBookToList(generics.CreateAPIView):
+#     serializer_class = UserBookSerializer
+#     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
-        book_id = self.request.data.get('book_id')
-        read_status = self.request.data.get('read_status', 'to-read')
+#     def perform_create(self, serializer):
+#         book_id = self.request.data.get('book_id')
+#         read_status = self.request.data.get('read_status', 'to-read')
 
-        book = Book.objects.get(id=book_id)
+#         book = Book.objects.get(id=book_id)
 
-        if UserBook.objects.filter(user=self.request.user, book=book).exists():
-            raise PermissionDenied("This book is already in your list.")
+#         if UserBook.objects.filter(user=self.request.user, book=book).exists():
+#             raise PermissionDenied("This book is already in your list.")
         
-        serializer.save(user=self.request.user, book=book, read_status=read_status)
+#         serializer.save(user=self.request.user, book=book, read_status=read_status)
 
-# View to delete a book from user's to-read or read list
-class DeleteBookFromListView(generics.DestroyAPIView):
-    serializer_class = UserBookSerializer
+# # View to delete a book from user's to-read or read list
+# class DeleteBookFromListView(generics.DestroyAPIView):
+#     serializer_class = UserBookSerializer
+#     permission_classes = [IsAuthenticated]
+
+#     def get_queryset(self):
+#         return UserBook.objects.filter(user=self.request.user)
+    
+#     def perform_destroy(self, instance):
+#         if instance.user != self.request.user:
+#             raise PermissionDenied("You do not have permission to delete this book")
+#         instance.delete()
+
+# # View to get to-read list of a user
+# class ToReadListView(generics.ListAPIView):
+#     serializer_class = UserBookSerializer
+#     permission_classes = [IsAuthenticated]
+
+#     def get_queryset(self):
+#         return UserBook.objects.filter(user=self.request.user, read_status="to-read")
+    
+# 
+
+class UserListsView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        return UserBook.objects.filter(user=self.request.user)
+    def get(self, request):
+        read_books = ReadList.objects.filter(user=request.user)
+        want_to_read_books = WantToReadList.objects.filter(user=request.user)
     
-    def perform_destroy(self, instance):
-        if instance.user != self.request.user:
-            raise PermissionDenied("You do not have permission to delete this book")
-        instance.delete()
+        read_books_serialized = ReadListSerializer(read_books, many=True)
+        want_to_read_books_serialized = WantToReadListSerializer(want_to_read_books, many=True)
 
-# View to get to-read list of a user
-class ToReadListView(generics.ListAPIView):
-    serializer_class = UserBookSerializer
+        return Response({
+            "read_list": read_books_serialized.data,
+            "want_to_read_list": want_to_read_books_serialized.data
+        })
+
+class AddToReadListView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        return UserBook.objects.filter(user=self.request.user, read_status="to-read")
+    def post(self, request):
+        print(request.data) # debugging
+        serializer = ReadListSerializer(data=data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
     
-# View to get read list of a user
-class ReadListView(generics.ListAPIView):
-    serializer_class = UserBookSerializer
+class AddToWantToReadListView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        return UserBook.objects.filter(user=self.request.user, read_status="read")
-    
-# View to get all books of a user
-class UserBookListView(generics.ListAPIView):
-    serializer_class = UserBookSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return UserBook.objects.filter(user=self.request.user)
-    
+    def post(self, request):
+        print(request.data) # debugging
+        book_id = request.data['payload']['book_id']
+        book_authors = request.data['payload']['author']
+        book_title = request.data['payload']['title']
+        thumbnail  = request.data['payload']['thumbnail']
+        filtered_data = {"book_id": book_id, 
+                         "author": book_authors,
+                         "title": book_title,
+                         "user": request.user.id,
+                         "thumbnail": thumbnail}
+        serializer = WantToReadListSerializer(data=filtered_data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
 # User registration
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()

@@ -1,5 +1,5 @@
 import React from "react";
-import bookGif from "../assets/images/book-animation.gif";
+import bookGif from "../assets/book-animation.gif";
 import "../styles/NotFoundPage.css";
 import { useNavigate } from "react-router-dom";
 

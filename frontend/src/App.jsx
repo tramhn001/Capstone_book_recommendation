@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -8,43 +8,44 @@ import SearchResultPage from "./pages/SearchResultPage";
 import ProfilePage from "./pages/ProfilePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Layout from "./pages/Layout";
-import PrivateRoute from "./components/common/PrivateRoute";
+import PrivateRoute from "./components/PrivateRoute";
 // import "./styles/App.css";
 
-const kbaseURL = import.meta.env.VITE_APP_BACKEND_URL;
-// const apiKey = process.env.GOOGLE_BOOK_API_KEY
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
-  const [searchResults, setSearchResults] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     setIsLoggedIn(!!token);
   }, []);
+
+  // const handleLogout = () => {
+  //   localStorage.removeItem("accessToken");
+  //   localStorage.removeItem("refreshToken");
+  //   setIsLoggedIn(false);
+  // };
 
   return (
     <Router>
       <Routes>
-        <Route element={<Layout />}>
+        <Route element={<Layout setIsLoggedIn={setIsLoggedIn}/>}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/search" element={<SearchResultPage />} />
+          <Route path="/register" element={<RegisterPage/>} />
+          <Route path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn}/>} />
+          <Route path="/search" element={<SearchResultPage isLoggedIn={isLoggedIn}/>} />
           <Route 
             path="/recommendation" 
             element={
-              <PrivateRoute>
+              <PrivateRoute isLoggedIn={isLoggedIn}>
                 <RecommendationPage />
               </PrivateRoute>
             }
           />
-          <Route path="/search" element={<SearchResultPage />} />
           <Route 
             path="/profile" 
             element={
-              <PrivateRoute>
+              <PrivateRoute isLoggedIn={isLoggedIn}>
                 <ProfilePage />
               </PrivateRoute>
             }

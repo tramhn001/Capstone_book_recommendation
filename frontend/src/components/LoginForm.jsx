@@ -1,18 +1,17 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // For making API requests
-import "../../styles/LoginForm.css"; 
+import axios from "axios"; 
+import "../styles/LoginForm.css"; 
 
-const LoginForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const LoginForm = ({ setIsLoggedIn }) => {
+  const [email, setEmail] = useState("test123@gmail.com");
+  const [password, setPassword] = useState("12345");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent page reload
-
     // Basic validation
     if (!email || !password) {
       setError("Please fill in all fields.");
@@ -24,25 +23,28 @@ const LoginForm = () => {
 
     try {
       // Replace with deployed API endpoint later
-      const response = await axios.post("http://localhost:8000/api/user/login/", {
+      const backendURL = import.meta.env.VITE_APP_BACKEND_URL;
+      const response = await axios.post(`${backendURL}/api/user/login/`, {
         username: email,
         password,
       });
 
       // Extract tokens from response
       const { access, refresh } = response.data;
-
+      console.log(response.data); 
       // save token in localStorage
       localStorage.setItem("accessToken", access);
       localStorage.setItem("refreshToken", refresh);
 
+      setIsLoggedIn(true);
       // redirect to the user profile
       navigate("/profile");
     } catch (err) {
+      console.log("Error here");
+      console.log(err);
       setError(err.response?.data?.detail || "Invalid credentials. Please try again.");
-    } finally {
       setIsLoading(false);
-    }
+    } 
 };
 
 

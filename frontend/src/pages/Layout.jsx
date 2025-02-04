@@ -1,13 +1,13 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import Navbar from "../components/common/Navbar";
-import Footer from "../components/common/Footer";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import "../styles/Layout.css";  
 
-const Layout = () => {
+const Layout = ({ setIsLoggedIn }) => {
   return (  
     <div className="app">
-      <Navbar />
+      <Navbar setIsLoggedIn={setIsLoggedIn}/>
       <main>
         <Outlet />
       </main>
