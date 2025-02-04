@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../../styles/Navbar.css";
-import BookBuddy_Logo from "../../assets/images/BookBuddy_Logo.png";
+import "../styles/Navbar.css";
+import BookBuddy_Logo from "../assets/BookBuddy_Logo.png";
 import { FaUserCircle } from "react-icons/fa";
 
-const Navbar = () => {
+const Navbar = ({ setIsLoggedIn }) => {
   const navigate = useNavigate();
   const isLoggedIn = !!localStorage.getItem("accessToken");
   const [showDropdown, setShowDropdown] = React.useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    setIsLoggedIn(false);
     navigate("/login");
   };
 
@@ -41,8 +43,7 @@ const Navbar = () => {
             )}
           </div>
         )}
-      </div>
-      {!isLoggedIn && <Link className="login-link" to="/login">Login</Link>}
+      </div>      
     </nav>
   );
 };

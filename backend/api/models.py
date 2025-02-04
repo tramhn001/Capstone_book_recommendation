@@ -25,3 +25,27 @@ class UserBook(models.Model):
 
     class Meta:
         unique_together = ('user', 'book')
+
+class ReadList(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="read_books")
+    book_id = models.CharField(max_length=255, unique=True)
+    title = models.CharField(max_length=255)
+    author = models.CharField(max_length=255, blank=True, null=True)
+    finished_date = models.DateTimeField(blank=True, null=True)
+    rating = models.IntegerField(blank=True, null=True)
+    review = models.TextField(blank=True, null=True)
+    added_at = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.title}"
+
+class WantToReadList(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="want_to_read_books")
+    book_id = models.CharField(max_length=255, unique=True)
+    title = models.CharField(max_length=255)
+    author = models.CharField(max_length=255, blank=True, null=True)
+    added_at = models.DateField(auto_now_add=True)
+    thumbnail = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.user.username} wants to read {self.title}"

@@ -2,10 +2,17 @@ import axios from "axios";
 import React, { useState } from "react";
 import "../styles/SearchResultPage.css";
 
-const SearchResultPage = ({ isLoggedIn }) => {
+const SearchResultPage = ({isLoggedIn}) => {
+  console.log("Is user logged in?", isLoggedIn);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [error, setError] = useState("");
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [selectedBook, setSelectedBook] = useState(null);
+  const [reviewText, setReviewText] = useState("");
+  const [rating, setRating] = useState(0);
+  const [finishedDate, setFinishedDate] = useState("");
 
   const handleSearch = async () => {
     if (!searchQuery) {
@@ -14,7 +21,7 @@ const SearchResultPage = ({ isLoggedIn }) => {
     }
     try {
       const response = await axios.get(
-        `https://www.googleapis.com/books/v1/volumes?q=${searchQuery}`      
+        `https://www.googleapis.com/books/v1/volumes?q=${searchQuery}`
       );
       setSearchResults(response.data.items || []);
       setError("");
@@ -29,32 +36,59 @@ const SearchResultPage = ({ isLoggedIn }) => {
     }
   };
 
+  const openReviewModal = (book) => {
+    setSelectedBook(book);
+    setShowReviewModal(true);
+  };
+
+  const closeReviewModal = () => {
+    setShowReviewModal(false);
+    setSelectedBook(null);
+    setReviewText("");
+    setRating(0);
+    setFinishedDate("");
+  };
+
   const addToReadList = async (bookId) => {
     try {
       await axios.post(
-        "http://localhost:8000/api/user/lists/read/",
-        { book_id: bookId },
+        "http://localhost:8000/api/user/lists/read/add/",
         {
-          headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}`},
+          book_id: bookId,
+          review: reviewText,
+          rating: rating,
+          finished_date: finishedDate,
+        },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
         }
       );
       alert("Book added to Read List successfully!");
+      closeReviewModal();
     } catch (err) {
+      console.log(err);
       setError("Failed to add book to Read List. Please try again.");
     }
   };
 
-  const addToWantToReadList = async (bookId) => {
+  const addToWantToReadList = async (book) => {
+    const author = book.volumeInfo?.authors?.join(", ") || "Unknown Authors";
+    const payload = { book_id: book.id, 
+                      title: book.volumeInfo?.title, 
+                      author: author,
+                      thumbnail: book.volumeInfo?.imageLinks?.thumbnail || "https://via.placeholder.com/128x193.png?text=No+Image"};
+
     try {
       await axios.post(
-        "http://localhost:8000/api/user/lists/want-to-read/",
-        { book_id: bookId },
+        "http://localhost:8000/api/user/lists/want-to-read/add/",
+        {payload},
         {
-          headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}`},
+          headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
         }
       );
       alert("Book added to Want-to-Read List successfully!");
     } catch (err) {
+      console.error(err);
       setError("Failed to add book to Want-to-Read List. Please try again.");
     }
   };
@@ -68,7 +102,7 @@ const SearchResultPage = ({ isLoggedIn }) => {
           placeholder="Enter book title"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={handleKeyDown} // Handle Enter key press
+          onKeyDown={handleKeyDown}
         />
         <button onClick={handleSearch}>Search</button>
       </div>
@@ -78,7 +112,7 @@ const SearchResultPage = ({ isLoggedIn }) => {
         <div className="search-results">
           {searchResults.map((book) => (
             <div key={book.id} className="book-item">
-              <img 
+              <img
                 src={book.volumeInfo?.imageLinks?.thumbnail || "https://via.placeholder.com/128x193.png?text=No+Image"}
                 alt={book.volumeInfo?.title || "No Cover Available"}
               />
@@ -92,8 +126,8 @@ const SearchResultPage = ({ isLoggedIn }) => {
               {/* Show buttons only if the user is logged in */}
               {isLoggedIn && (
                 <div className="book-actions">
-                  <button onClick={() => addToReadList(book.id)}>Add to Read List</button>
-                  <button onClick={() => addToWantToReadList(book.id)}>Add to Want-to-Read List</button>
+                  <button onClick={() => openReviewModal(book)}>Add to Read List</button>
+                  <button onClick={() => addToWantToReadList(book)}>Add to Want-to-Read List</button>
                 </div>
               )}
             </div>
@@ -101,6 +135,30 @@ const SearchResultPage = ({ isLoggedIn }) => {
         </div>
       ) : (
         <p>Try searching for a book!</p>
+      )}
+
+      {/* Review Modal */}
+      {showReviewModal && (
+        <div className="review-modal">
+          <div className="modal-content">
+            <h3>Review for {selectedBook?.volumeInfo?.title}</h3>
+            <label>Rating:</label>
+            <select value={rating} onChange={(e) => setRating(parseInt(e.target.value))}>
+              <option value={0}>Select Rating</option>
+              <option value={1}>⭐</option>
+              <option value={2}>⭐⭐</option>
+              <option value={3}>⭐⭐⭐</option>
+              <option value={4}>⭐⭐⭐⭐</option>
+              <option value={5}>⭐⭐⭐⭐⭐</option>
+            </select>
+            <label>Finished Date:</label>
+            <input type="date" value={finishedDate} onChange={(e) => setFinishedDate(e.target.value)} />
+            <label>Review:</label>
+            <textarea value={reviewText} onChange={(e) => setReviewText(e.target.value)}></textarea>
+            <button onClick={addToReadList}>Submit Review</button>
+            <button onClick={closeReviewModal}>Cancel</button>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -1,13 +1,14 @@
 import React from "react";
-import LoginForm from "../components/auth/LoginForm";
+import LoginForm from "../components/LoginForm";
 import "../styles/LoginPage.css";
 
-const LoginPage = () => {
+
+const LoginPage = ({ setIsLoggedIn }) => {
   return (
     <div className="login-page-container">
       <h1>Welcome to BookBuddy</h1>
       <div className="login-form-wrapper">
-        <LoginForm />
+        <LoginForm setIsLoggedIn={setIsLoggedIn} />
       </div>
     </div>
   );

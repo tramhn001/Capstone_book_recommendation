@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Book, UserBook
+from .models import Book, UserBook, ReadList, WantToReadList
 # from django.contrib.auth.hashers import make_password
 
 
@@ -57,3 +57,17 @@ class UserBookSerializer(serializers.ModelSerializer):
             if value < 1 or value > 5:
                 raise serializers.ValidationError("Rating must be between 1 and 5")
             return value
+        
+class ReadListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReadList
+        fields = ["book_id", "user", "finished_date", "rating", "review"]
+
+class WantToReadListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WantToReadList
+        fields = ["book_id", 
+                  "title",
+                  "author",
+                  "user",
+                  "thumbnail"]
