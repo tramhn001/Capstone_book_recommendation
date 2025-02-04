@@ -61,7 +61,14 @@ class UserBookSerializer(serializers.ModelSerializer):
 class ReadListSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReadList
-        fields = ["book_id", "user", "finished_date", "rating", "review"]
+        fields = ["book_id", 
+                  "title", 
+                  "author", 
+                  "user", 
+                  "finished_date", 
+                  "rating", 
+                  "review", 
+                  "thumbnail"]
 
 class WantToReadListSerializer(serializers.ModelSerializer):
     class Meta:

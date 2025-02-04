@@ -169,7 +169,23 @@ class AddToReadListView(APIView):
 
     def post(self, request):
         print(request.data) # debugging
-        serializer = ReadListSerializer(data=data)
+        book_id = request.data['payload']['book_id']
+        book_authors = request.data['payload']['author']
+        book_title = request.data['payload']['title']
+        thumbnail  = request.data['payload']['thumbnail']
+        finished_date = request.data['payload']['finished_date']
+        rating = request.data['payload']['rating']
+        review = request.data['payload']['review']
+        filtered_data = {"book_id": book_id, 
+                         "author": book_authors,
+                         "title": book_title,
+                         "user": request.user.id,
+                         "thumbnail": thumbnail,
+                         "finished_date": finished_date,
+                         "rating": rating,
+                         "review": review}
+        
+        serializer = ReadListSerializer(data=filtered_data)
 
         if serializer.is_valid():
             serializer.save()
