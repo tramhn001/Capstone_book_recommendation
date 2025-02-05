@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import CreateUserView, LoginView, GoogleBooksSearchView, UserListsView, AddToReadListView, AddToWantToReadListView
+from .views import CreateUserView, LoginView, GoogleBooksSearchView, UserListsView, AddToReadListView, AddToWantToReadListView, RemoveBookFromListView, RecommendationView
 
 urlpatterns = [
     path("user/register/", CreateUserView.as_view(), name="register-user"),
@@ -12,5 +12,6 @@ urlpatterns = [
     path("user/lists/", UserListsView.as_view(), name="user-lists"),
     path("user/lists/read/add/", AddToReadListView.as_view(), name="add-to-read-list"),
     path("user/lists/want-to-read/add/", AddToWantToReadListView.as_view(), name="add-to-want-to-read-list"),
-    # path("books/recommendations/", RecommendationView.as_view(), name="recommend-books"),
+    path("user/lists/<str:list_type>/remove/<str:book_id>/", views.RemoveBookFromListView.as_view(), name="remove-book"),
+    path("user/lists/recommendations/", RecommendationView.as_view(), name="recommend-books"),
 ]

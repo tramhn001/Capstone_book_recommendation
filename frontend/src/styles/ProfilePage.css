@@ -1,124 +1,116 @@
-/* Container for the profile page */
+/* Container */
 .profile-page-container {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
+    padding-top: 80px;
+}
+
+/* Headings */
+h1, h2 {
     text-align: center;
-    background-color: #f8f9fa;
-    min-height: 100vh;
 }
 
-/* Page title */
-.profile-page-container h1 {
-    font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    font-family: 'Georgia', serif;
-}
-
-/* Error message */
 .error-message {
     color: red;
-    font-size: 14px;
-    margin-top: 10px;
-}
-
-/* Search bar */
-.search-bar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.search-bar input {
-    padding: 10px;
-    font-size: 16px;
-    width: 300px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.search-bar button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-.search-bar button:hover {
-    background-color: #0056b3;
-}
-
-/* Book lists (Read List & Want-to-Read List) */
-.read-list, .want-to-read-list {
-    margin-top: 30px;
-    background-color: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: left;
-}
-
-.read-list h2, .want-to-read-list h2 {
-    font-size: 24px;
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 5px;
+    text-align: center;
     margin-bottom: 15px;
 }
 
-/* Book list items */
-.read-list ul, .want-to-read-list ul {
-    list-style: none;
+/* Lists */
+.read-list, .want-to-read-list {
+    margin-top: 30px;
+}
+
+.read-list h2, .want-to-read-list h2 {
+    margin-bottom: 15px;
+}
+
+/* Book List Grid */
+.book-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
     padding: 0;
+    list-style: none;
 }
 
-.read-list li, .want-to-read-list li {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
+/* Book Item */
+.book-list li {
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+    text-align: center;
 }
 
-.read-list li:last-child, .want-to-read-list li:last-child {
-    border-bottom: none;
+.book-list li:hover {
+    transform: scale(1.05);
 }
 
-.read-list h3, .want-to-read-list h3 {
-    font-size: 18px;
-    font-weight: bold;
-    margin: 5px 0;
+/* Book Cover */
+.book-list img {
+    width: 120px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 5px;
 }
 
-.read-list p, .want-to-read-list p {
+/* Book Title */
+.book-list h3 {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+/* Book Author */
+.book-list p {
     font-size: 14px;
     color: #555;
 }
 
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-    .profile-page-container {
-        padding: 10px;
-    }
-
-    .search-bar input {
-        width: 250px;
-    }
+/* Star Rating */
+.book-rating {
+    display: flex;
+    justify-content: center;
+    margin: 5px 0;
 }
 
-@media (max-width: 480px) {
-    .search-bar {
-        flex-direction: column;
-    }
+.star {
+    font-size: 18px;
+    color: #ffd700;
+}
 
-    .search-bar input {
-        width: 100%;
-    }
+.star.empty {
+    color: #ccc;
+}
 
-    .search-bar button {
+/* Remove Button */
+.remove-button {
+    width: 90%; /* Ensures buttons have equal width */
+    padding: 8px;
+    font-size: 0.9rem;
+    background-color: #9164a5;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: auto;
+}
+
+.remove-button:hover {
+    background-color: #c82333;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .book-list li {
         width: 100%;
     }
 }

@@ -37,6 +37,7 @@ class Migration(migrations.Migration):
                 ('review', models.TextField(blank=True, null=True)),
                 ('added_at', models.DateField(auto_now_add=True)),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='read_books', to=settings.AUTH_USER_MODEL)),
+                ('thumbnail', models.CharField(blank=True, max_length=255, null=True)),
             ],
         ),
     ]

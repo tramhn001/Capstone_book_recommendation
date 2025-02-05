@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.exceptions import PermissionDenied
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -10,8 +9,9 @@ import requests
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .serializers import UserSerializer, BookSerializer, UserBookSerializer, LoginSerializer, ReadListSerializer, WantToReadListSerializer  
+from .serializers import UserSerializer,LoginSerializer, ReadListSerializer, WantToReadListSerializer  
 from .models import Book, UserBook, ReadList, WantToReadList
+
 
 # User login view to accept email instead of username
 class LoginView(APIView):
@@ -97,57 +97,6 @@ class GoogleBooksSearchView(APIView):
                 })
             return Response(results)
         return Response({"error": "Failed to fetch data from Google Books API"}, status=response.status_code)
-    
-# View to list and create books
-# class BookListCreate(generics.ListCreateAPIView):
-#     serializer_class = BookSerializer
-#     permission = [IsAuthenticated]
-
-#     def get_queryset(self):
-#         user = self.request.user
-#         return Book.objects.all()
-    
-#     def perform_create(self, serializer):
-#         serializer.save()
-
-# # View to add a book to user's to-read or read list
-# class AddBookToList(generics.CreateAPIView):
-#     serializer_class = UserBookSerializer
-#     permission_classes = [IsAuthenticated]
-
-#     def perform_create(self, serializer):
-#         book_id = self.request.data.get('book_id')
-#         read_status = self.request.data.get('read_status', 'to-read')
-
-#         book = Book.objects.get(id=book_id)
-
-#         if UserBook.objects.filter(user=self.request.user, book=book).exists():
-#             raise PermissionDenied("This book is already in your list.")
-        
-#         serializer.save(user=self.request.user, book=book, read_status=read_status)
-
-# # View to delete a book from user's to-read or read list
-# class DeleteBookFromListView(generics.DestroyAPIView):
-#     serializer_class = UserBookSerializer
-#     permission_classes = [IsAuthenticated]
-
-#     def get_queryset(self):
-#         return UserBook.objects.filter(user=self.request.user)
-    
-#     def perform_destroy(self, instance):
-#         if instance.user != self.request.user:
-#             raise PermissionDenied("You do not have permission to delete this book")
-#         instance.delete()
-
-# # View to get to-read list of a user
-# class ToReadListView(generics.ListAPIView):
-#     serializer_class = UserBookSerializer
-#     permission_classes = [IsAuthenticated]
-
-#     def get_queryset(self):
-#         return UserBook.objects.filter(user=self.request.user, read_status="to-read")
-    
-# 
 
 class UserListsView(APIView):
     permission_classes = [IsAuthenticated]
@@ -211,6 +160,68 @@ class AddToWantToReadListView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RemoveBookFromListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, list_type, book_id):
+        user = request.user
+        print(f"Received DELETE request for {list_type} list, book_id={book_id}, user={user}")
+
+        if list_type == "read":
+            book_entry = ReadList.objects.filter(user=user, book_id=book_id).first()
+        elif list_type == "want-to-read":
+            book_entry = WantToReadList.objects.filter(user=user, book_id=book_id).first()
+        else:
+            return Response({"error": "Invalid list type"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check if book_entry is None before calling delete()
+        if book_entry is None:
+            print("Book not found, returning 404")
+            return Response({"error": "Book not found in the list"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Now it's safe to call delete()
+        book_entry.delete()
+        print("Book deleted successfully")
+        return Response({"message": "Book removed successfully"}, status=status.HTTP_200_OK)
+    
+class RecommendationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        read_books = ReadList.objects.filter(user=user)
+        want_to_read_books = WantToReadList.objects.filter(user=user)
+
+        # Combine the books from both lists
+        all_books = list(read_books) + list(want_to_read_books)
+
+        # Extract genres from the books
+        genres = []
+        for book in all_books:
+            if book.genre:
+                genres.extend(book.genre)
+
+        # Count the occurrences of each genre
+        genre_counts = {}
+        for genre in genres:
+            if genre in genre_counts:
+                genre_counts[genre] += 1
+            else:
+                genre_counts[genre] = 1
+
+        # Sort genres by their counts in descending order
+        sorted_genres = sorted(genre_counts.items(), key=lambda x: x[1], reverse=True)
+
+        # Get the top 3 genres
+        top_genres = [genre for genre, count in sorted_genres[:3]]
+
+        # Fetch recommendations based on the top genres
+        recommendations = Book.objects.filter(genre__in=top_genres).exclude(id__in=[book.id for book in all_books])
+
+        return Response({"recommendations": recommendations.values()})
+        
         
 # User registration
 class CreateUserView(generics.CreateAPIView):

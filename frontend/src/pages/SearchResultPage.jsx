@@ -49,16 +49,24 @@ const SearchResultPage = ({isLoggedIn}) => {
     setFinishedDate("");
   };
 
-  const addToReadList = async (bookId) => {
+  const addToReadList = async () => {
+    if (!selectedBook) return;
+    console.log(selectedBook);
+    
+    const author = selectedBook.volumeInfo?.authors?.join(", ") || "Unknown Authors";
+    const payload = { book_id: selectedBook.id,
+                      title: selectedBook.volumeInfo?.title,
+                      author: author,
+                      rating: rating,
+                      review: reviewText,
+                      finished_date: finishedDate,
+                      thumbnail: selectedBook.volumeInfo?.imageLinks?.thumbnail || "https://via.placeholder.com/128x193.png?text=No+Image"
+    }
     try {
+      console.log(payload);
       await axios.post(
         "http://localhost:8000/api/user/lists/read/add/",
-        {
-          book_id: bookId,
-          review: reviewText,
-          rating: rating,
-          finished_date: finishedDate,
-        },
+        {payload},
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
         }
@@ -70,6 +78,7 @@ const SearchResultPage = ({isLoggedIn}) => {
       setError("Failed to add book to Read List. Please try again.");
     }
   };
+
 
   const addToWantToReadList = async (book) => {
     const author = book.volumeInfo?.authors?.join(", ") || "Unknown Authors";
@@ -126,7 +135,7 @@ const SearchResultPage = ({isLoggedIn}) => {
               {/* Show buttons only if the user is logged in */}
               {isLoggedIn && (
                 <div className="book-actions">
-                  <button onClick={() => openReviewModal(book)}>Add to Read List</button>
+                  <button onClick={(e) => { e.stopPropagation(); openReviewModal(book); }}>Add to Read List</button>
                   <button onClick={() => addToWantToReadList(book)}>Add to Want-to-Read List</button>
                 </div>
               )}
@@ -155,7 +164,7 @@ const SearchResultPage = ({isLoggedIn}) => {
             <input type="date" value={finishedDate} onChange={(e) => setFinishedDate(e.target.value)} />
             <label>Review:</label>
             <textarea value={reviewText} onChange={(e) => setReviewText(e.target.value)}></textarea>
-            <button onClick={addToReadList}>Submit Review</button>
+            <button onClick={(e) => { e.stopPropagation; addToReadList(selectedBook); }}>Submit Review</button>
             <button onClick={closeReviewModal}>Cancel</button>
           </div>
         </div>

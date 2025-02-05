@@ -22,6 +22,7 @@ class UserBook(models.Model):
     rating = models.IntegerField(blank=True, null=True)
     review = models.TextField(blank=True, null=True)
     added_at = models.DateField(auto_now_add=True)
+    genre = models.JSONField(blank=True, null=True)
 
     class Meta:
         unique_together = ('user', 'book')
@@ -35,6 +36,8 @@ class ReadList(models.Model):
     rating = models.IntegerField(blank=True, null=True)
     review = models.TextField(blank=True, null=True)
     added_at = models.DateField(auto_now_add=True)
+    thumbnail = models.CharField(max_length=255, blank=True, null=True)
+
 
     def __str__(self):
         return f"{self.user.username} - {self.title}"

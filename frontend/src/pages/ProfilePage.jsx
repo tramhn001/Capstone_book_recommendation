@@ -38,20 +38,23 @@ const ProfilePage = () => {
 		}
   };
 
-  // Handle book search
-  const handleSearch = async () => {
-		if (!searchQuery) {
-			setError("Please enter a search term.");
-			return;
-		}
+  const removeBookFromList = async (bookId, listType) => {
+    const confirmDelete = window.confirm(`Are you sure you want to remove this book from ${listType === "read" ? "Read" : "Want-to-Read"} list?`);
+    if (!confirmDelete) return;
+    try {
+      await axios.delete(`http://localhost:8000/api/user/lists/${listType}/remove/${bookId}/`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+      );
 
-		try {
-			const response = await axios.get(`http://localhost:8000/api/books/search?query=${searchQuery}`);
-			console.log(response.data);
-			setSearchResults(response.data);
-		} catch (err) {
-			setError("Failed to fetch search results. Please try again.");
-		}
+      alert("Book removed successfully!");
+      fetchUserLists(); // Refresh the list after deletion
+
+    } catch (err) {
+      setError("Failed to remove book. Please try again.");
+    }
   };
 
   return (
@@ -59,35 +62,34 @@ const ProfilePage = () => {
 			<h1>Profile Page</h1>
 			{error && <p className="error-message">{error}</p>}
 
-			
-			{/* Search Bar */}
-			<div className="search-bar">
-				<input
-					type="text"
-					placeholder="Search for books..."
-					value={searchQuery}
-					onChange={(e) => setSearchQuery(e.target.value)}
-				/>
-				<button onClick={handleSearch}>Search</button>
-			</div>
-
-			{/* Search Results */}
-			{/* <SearchResults
-				results={searchResults}
-				isLoggedIn={true} // User is logged in
-				onAddToReadList={addToReadList}
-				onAddToWantToReadList={addToWantToReadList}
-			/> */}
-
 			{/* Read List */}
 			<div className="read-list">
 				<h2>Read List</h2>
 				{readList.length > 0 ? (
-					<ul>
+					<ul className="book-list">
 						{readList.map((book) => (
 							<li key={book.book_id}>
+								<img
+								src={book.thumbnail || "https://via.placeholder.com/128x193.png?text=No+Image"}
+								alt={book.title || "No Cover Available"}>									
+								</img>
 								<h3>{book.title}</h3>
 								<p>{book.author}</p>
+								
+								{/* Star Rating */}
+								<div className="book-rating">
+									{Array.from({ length: book.rating }).map((_, index) => (
+										<span key={index} className="star filled">★</span>
+									))}
+									{Array.from({ length: 5 - book.rating }).map((_, index) => (
+										<span key={index} className="star empty">★</span>
+									))}
+								</div>
+								<p>{book.review}</p>
+								<p>{book.finished_at}</p>
+
+                {/* Remove Book Button  */}
+                <button className="remove-button" onClick={() => removeBookFromList(book.book_id, "read")}>Remove</button>
 							</li>
 						))}
 					</ul>
@@ -100,16 +102,17 @@ const ProfilePage = () => {
 			<div className="want-to-read-list">
 				<h2>Want-to-Read List</h2>
 				{wantToReadList.length > 0 ? (
-					<ul>
+					<ul className="book-list">
 						{wantToReadList.map((book) => (
-							<li key={book.book_id} display="inline"> 
+							<li key={book.book_id}> 
 								<img
 								src={book.thumbnail || "https://via.placeholder.com/128x193.png?text=No+Image"}
 								alt={book.title || "No Cover Available"}>									
 								</img>
 								<h3>{book.title}</h3>
 								<p>{book.author}</p>	
-								
+                {/* Remove Book Button  */}
+                <button className="remove-button" onClick={() => removeBookFromList(book.book_id, "want-to-read")}>Remove</button>
 							</li>							
 						))}
 					</ul>

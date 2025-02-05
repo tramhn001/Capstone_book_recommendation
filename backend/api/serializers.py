@@ -50,7 +50,7 @@ class BookSerializer(serializers.ModelSerializer):
 class UserBookSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserBook
-        fields = ['id', 'user', 'book', 'read_status', 'finished_date', 'rating', 'review', 'added_at']
+        fields = ['id', 'user', 'book', 'read_status', 'finished_date', 'rating', 'review', 'added_at', 'genre']
         read_only_fields = ['user', 'added_at']
 
         def validate_rating(self, value):
