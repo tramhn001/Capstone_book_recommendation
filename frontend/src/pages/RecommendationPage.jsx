@@ -1,10 +1,105 @@
-import React from "react";
+import React, { useState } from "react";
+import "../styles/RecommendationPage.css";
+import axios from "axios";
 
-const RecommendationPage = ({ pageName }) => {
+const RecommendationPage = ({ isLoggedIn }) => {
+  const [recommendationByGenre, setRecommendationByGenre] = useState(null);
+  const [recommendationByAuthor, setRecommendationByAuthor] = useState(null);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchRecommendations = async () => {
+    setIsLoading(true);
+    setError("");
+
+    try {
+      const response_rec_genre = await axios.get(
+        `http://localhost:8000/api/user/lists/recommendations/genre/`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      const response_rec_author = await axios.get(
+        `http://localhost:8000/api/user/lists/recommendations/author/`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
+      setRecommendationByGenre(response_rec_genre.data.recommendations_by_genre || {});
+      setRecommendationByAuthor(response_rec_author.data.recommendations_by_author || {});
+    } catch (err) {
+      console.log(err);
+      setError("Failed to fetch recommendations. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h2>{pageName} Page</h2>
-      <p>This page is under construction 🚧</p>
+    <div className="recommendation-page">
+      <h2>Book Recommendations</h2>
+      <p>Discover books based on your favorite genres and authors!</p>
+
+      <div className="buttons">
+        <button onClick={fetchRecommendations} disabled={isLoading}>
+          {isLoading ? "Loading..." : "Get Recommendations"}
+        </button>
+      </div>
+
+      {error && <p className="error">{error}</p>}
+
+      <div className="recommendation-container">
+        {/* Recommendations by Genre */}
+        <div className="recommendation-list">
+          <h3>Recommended Books by Genre</h3>
+          {recommendationByGenre && Object.keys(recommendationByGenre).length > 0 ? (
+            Object.entries(recommendationByGenre).map(([genre, books]) => (
+              <div key={genre} className="genre-section">
+                <h4>{genre}</h4>
+                <div className="book-list">
+                  {books.map((book) => (
+                    <div key={book.id} className="book-card">
+                      <img src={book.thumbnail} alt={book.title} className="book-cover" />
+                      <h4>{book.title}</h4>
+                      <p>by {book.authors}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No genre recommendations yet. Try adding more books to your list!</p>
+          )}
+        </div>
+
+        {/* Recommendations by Author */}
+        <div className="recommendation-list">
+          <h3>Recommended Books by Author</h3>
+          {recommendationByAuthor && Object.keys(recommendationByAuthor).length > 0 ? (
+            Object.entries(recommendationByAuthor).map(([author, books]) => (
+              <div key={author} className="author-section">
+                <h4>{author}</h4>
+                <div className="book-list">
+                  {books.map((book) => (
+                    <div key={book.id} className="book-card">
+                      <img src={book.thumbnail} alt={book.title} className="book-cover" />
+                      <h4>{book.title}</h4>
+                      <p>by {book.authors}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No author recommendations yet. Try adding more books to your list!</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

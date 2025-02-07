@@ -60,7 +60,8 @@ const SearchResultPage = ({isLoggedIn}) => {
                       rating: rating,
                       review: reviewText,
                       finished_date: finishedDate,
-                      thumbnail: selectedBook.volumeInfo?.imageLinks?.thumbnail || "https://via.placeholder.com/128x193.png?text=No+Image"
+                      thumbnail: selectedBook.volumeInfo?.imageLinks?.thumbnail || "https://via.placeholder.com/128x193.png?text=No+Image",
+                      genre: selectedBook.volumeInfo?.categories?.join(',') || "Unknown Genres"
     }
     try {
       console.log(payload);
@@ -85,8 +86,10 @@ const SearchResultPage = ({isLoggedIn}) => {
     const payload = { book_id: book.id, 
                       title: book.volumeInfo?.title, 
                       author: author,
-                      thumbnail: book.volumeInfo?.imageLinks?.thumbnail || "https://via.placeholder.com/128x193.png?text=No+Image"};
-
+                      thumbnail: book.volumeInfo?.imageLinks?.thumbnail || "https://via.placeholder.com/128x193.png?text=No+Image",
+                      genre: book.volumeInfo?.categories?.join(',') || "Unknown Genres"
+                    }
+    console.log(payload);                      
     try {
       await axios.post(
         "http://localhost:8000/api/user/lists/want-to-read/add/",

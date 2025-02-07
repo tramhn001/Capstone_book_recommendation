@@ -20,12 +20,6 @@ const App = () => {
     setIsLoggedIn(!!token);
   }, []);
 
-  // const handleLogout = () => {
-  //   localStorage.removeItem("accessToken");
-  //   localStorage.removeItem("refreshToken");
-  //   setIsLoggedIn(false);
-  // };
-
   return (
     <Router>
       <Routes>
@@ -35,7 +29,7 @@ const App = () => {
           <Route path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn}/>} />
           <Route path="/search" element={<SearchResultPage isLoggedIn={isLoggedIn}/>} />
           <Route 
-            path="/recommendation" 
+            path="/recommendations" 
             element={
               <PrivateRoute isLoggedIn={isLoggedIn}>
                 <RecommendationPage />

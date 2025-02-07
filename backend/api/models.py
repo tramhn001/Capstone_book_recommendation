@@ -37,6 +37,7 @@ class ReadList(models.Model):
     review = models.TextField(blank=True, null=True)
     added_at = models.DateField(auto_now_add=True)
     thumbnail = models.CharField(max_length=255, blank=True, null=True)
+    genre = models.CharField(max_length=100, blank=True, null=True)
 
 
     def __str__(self):
@@ -49,6 +50,31 @@ class WantToReadList(models.Model):
     author = models.CharField(max_length=255, blank=True, null=True)
     added_at = models.DateField(auto_now_add=True)
     thumbnail = models.CharField(max_length=255, blank=True, null=True)
+    genre = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return f"{self.user.username} wants to read {self.title}"
+    
+class RecommendationByGenre(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    genre = models.CharField(max_length=255)
+    recommended_books = models.ManyToManyField(Book)
+
+    def __str__(self):
+        return f"Recommendations for {self.user.username} in {self.genre} genre"
+
+class RecommendationByAuthor(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.CharField(max_length=255)
+    recommended_books = models.ManyToManyField(Book)
+
+    def __str__(self):
+        return f"Recommendations for {self.user.username} by author {self.author}"
+
+# class Recommendation(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     by_genre = models.OneToManyField(RecommendationByGenre)
+#     by_author = models.OneToManyField(RecommendationByAuthor)
+    
+#     def __str__(self):
+#         return f"Recommendations for {self.user.username}"

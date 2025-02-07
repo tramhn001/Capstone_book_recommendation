@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Book, UserBook, ReadList, WantToReadList
+from .models import Book, ReadList, WantToReadList, RecommendationByAuthor, RecommendationByGenre, UserBook
 # from django.contrib.auth.hashers import make_password
 
 
@@ -18,10 +18,6 @@ class UserSerializer(serializers.ModelSerializer):
             password=validated_data["password"]
         )
         return user
-    
-    # def create(self, validated_data):
-    #     validated_data['password'] = make_password(validated_data['password'])
-    #     return super().create(validated_data)
     
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -42,12 +38,14 @@ class LoginSerializer(serializers.Serializer):
 
 # Serializer for Book model
 class BookSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Book
         fields = ['id', 'google_book_id', 'title', 'author', 'published_date', 'description', 'cover_image', 'genre']
 
 # Serializer for UserBook model
 class UserBookSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = UserBook
         fields = ['id', 'user', 'book', 'read_status', 'finished_date', 'rating', 'review', 'added_at', 'genre']
@@ -59,6 +57,7 @@ class UserBookSerializer(serializers.ModelSerializer):
             return value
         
 class ReadListSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = ReadList
         fields = ["book_id", 
@@ -68,13 +67,40 @@ class ReadListSerializer(serializers.ModelSerializer):
                   "finished_date", 
                   "rating", 
                   "review", 
-                  "thumbnail"]
+                  "thumbnail",
+                  "genre"]
 
 class WantToReadListSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = WantToReadList
         fields = ["book_id", 
                   "title",
                   "author",
                   "user",
-                  "thumbnail"]
+                  "thumbnail",
+                  "genre"]
+    
+# class RecommendationSerializer(serializers.ModelSerializer):
+#     # recommended_books = BookSerializer(many=True, read_only=True) # Nested serializer to include book details   
+
+#     class Meta:
+#         model = Recommendation
+#         fields = ["user",
+#                   "genre",
+#                   "recommended_books"]
+        
+
+class RecommendationByGenreSerializer(serializers.ModelSerializer):
+    recommended_books = BookSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = RecommendationByGenre
+        fields = ["user", "genre", "recommended_books"]
+
+class RecommendationByAuthorSerializer(serializers.ModelSerializer):
+    recommended_books = BookSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = RecommendationByAuthor
+        fields = ["user", "author", "recommended_books"]
