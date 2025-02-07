@@ -22,7 +22,7 @@ p {
 }
 
 button {
-  background-color: #007bff;
+  background-color: #7b42a9;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -38,7 +38,7 @@ button:disabled {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #ce91c9;
 }
 
 /* Layout: Two-column container */
@@ -63,7 +63,7 @@ button:hover {
   color: #444;
   font-size: 1.5rem;
   margin-bottom: 15px;
-  border-bottom: 2px solid #007bff;
+  border-bottom: 2px solid #184574;
   padding-bottom: 5px;
 }
 
@@ -74,7 +74,7 @@ button:hover {
 
 .genre-section h4, .author-section h4 {
   font-size: 1.2rem;
-  color: #007bff;
+  color: #489af1;
   margin-bottom: 10px;
 }
 

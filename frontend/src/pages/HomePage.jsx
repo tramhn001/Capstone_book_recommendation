@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar"; // Import Navbar component
 import "../styles/global.css"; // Ensure your global styles are imported
 import "../styles/Homepage.css"; // Import your homepage-specific styles
+import book_lilac from "../assets/book_lilac.jpg";
 
 const HomePage = () => {
     const isLoggedIn = !!localStorage.getItem("accessToken");
@@ -26,7 +27,7 @@ const HomePage = () => {
             </header>
 
             <section className="features">
-                {/* Future features can go here */}
+                <img src={book_lilac} alt="Book Image" />
             </section>
         </div>
     );
