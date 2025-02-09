@@ -1,6 +1,4 @@
-/* HomePage.css */
-
-/* Page Container */
+/* Container for the entire page */
 .home-container {
     min-height: 100vh;
     display: flex;
@@ -11,6 +9,71 @@
     font-family: 'Merriweather', serif;
     padding: 20px;
     text-align: center;
+    position: relative;
+    overflow: hidden; /* Ensure the background animation doesn't overflow */
+}
+
+/* Background columns for running book covers */
+.background-columns {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    z-index: 0; /* Ensure it stays behind other content */
+}
+
+.image-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    animation: scrollUp 30s linear infinite;
+}
+
+.image-column:nth-child(even) {
+    animation: scrollDown 30s linear infinite;
+}
+
+/* Scroll up animation */
+@keyframes scrollUp {
+    0% {
+        transform: translateY(100%);
+    }
+    100% {
+        transform: translateY(-100%);
+    }
+}
+
+/* Scroll down animation */
+@keyframes scrollDown {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+.image-column img {
+    width: 300px; /* Adjust image width */
+    max-width: 180px; /* Adjust image height */
+    height: auto;
+    border-radius: 5px; /* Optional: Add rounded corners */
+    animation: imgFadeIn 1s ease-in-out; /* Add a fade-in effect for images */
+}
+
+/* Fade-in effect for images */
+@keyframes imgFadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 /* Navigation Bar */
@@ -18,6 +81,7 @@ nav {
     position: absolute;
     top: 20px;
     right: 30px;
+    z-index: 2; /* Ensure it's above the background */
 }
 
 .home-btn {
@@ -39,49 +103,23 @@ nav {
 
 /* Header Styling */
 .home-header {
-    max-width: 700px;
-    background: rgba(255, 255, 255, 0.8);
-    padding: 20px;
+    max-width: 65%;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px;
     border-radius: 10px;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1; /* Ensure it's above the background */
 }
 
 .home-header h1 {
-    font-size: 32px;
+    font-size: 40px;
     color: #3a2e39;
     font-weight: bold;
 }
 
 .home-header p {
-    font-size: 18px;
+    font-size: 28px;
     color: #5a4e4d;
     margin-top: 10px;
-}
-
-/* Features Section */
-.features {
-    margin-top: 20px;
-    padding: 20px;
-    max-width: 800px;
-    text-align: center;
-    background: rgba(255, 255, 255, 0.6);
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.features h2 {
-    font-size: 24px;
-    color: #3a2e39;
-}
-
-.features p {
-    font-size: 16px;
-    color: #5a4e4d;
-    margin-top: 10px;
-}
-
-.features img {
-    width: 300px;
-    margin-top: 20px;
-    border-radius: 10px;
 }

@@ -59,7 +59,7 @@ const ProfilePage = () => {
 
   return (
 		<div className="profile-page-container">
-			<h1>Profile Page</h1>
+			<h1>Your Reading Journey</h1>
 			{error && <p className="error-message">{error}</p>}
 
 			{/* Read List */}

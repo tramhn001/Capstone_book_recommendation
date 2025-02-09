@@ -1,9 +1,17 @@
 /* Container */
 .profile-page-container {
-    max-width: 1000px;
-    margin: 0 auto;
     padding: 20px;
     padding-top: 80px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to right, #f6d365, #fda085);
+    font-family: 'Merriweather', serif;
+    padding: 80px;
+    text-align: center;
+
 }
 
 /* Headings */

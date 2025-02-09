@@ -19,9 +19,7 @@ const Navbar = ({ setIsLoggedIn }) => {
   return (
     <nav className="navbar">
       <div className="navbar-logo">
-        <Link to="/">
-          <img src={Logo3} alt="Book Buddy Logo" />
-        </Link>
+        <img src={Logo3} alt="Book Buddy Logo" />
       </div>
       <ul>
         <li><Link to="/">Home</Link></li>

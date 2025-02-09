@@ -1,36 +1,53 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Navbar from "../components/Navbar"; // Import Navbar component
 import "../styles/global.css"; // Ensure your global styles are imported
 import "../styles/Homepage.css"; // Import your homepage-specific styles
-import book_lilac from "../assets/book_lilac.jpg";
+import bookCovers from "../assets/bookCovers"; // Adjust the path as necessary
+
+const shuffleArray = (array) => {
+	return array.map(value => ({ value, sort: Math.random() }))
+		.sort((a, b) => a.sort - b.sort)
+		.map(({ value }) => value);
+};
 
 const HomePage = () => {
-    const isLoggedIn = !!localStorage.getItem("accessToken");
-    return (
-        <div className="home-container">
-            {/* Navbar at the top-left */}
-            {/* <Navbar /> */}
+	const isLoggedIn = !!localStorage.getItem("accessToken");
 
-            {!isLoggedIn && (
-                <div className="top-right-buttons">
-                    <Link to="/login" className="home-btn">Login</Link>
-                    <Link to="/register" className="home-btn">Sign Up</Link>
-                </div>
-            )
-            }   
+	const shuffleBooks = shuffleArray(bookCovers);
+	const columns = Array.from( {length: 5}, (_, colIndex) => 
+		shuffleBooks.filter((_, index) => index % 5 === colIndex)
+	);
 
-            {/* Main Header */}
-            <header className="home-header">
-                <h1>BookBuddy - Welcome to your next favorite book today</h1>
-                <p>Welcome to our vibrant community of book lovers! Dive into insightful reviews and personalized recommendations just for you.</p>
-            </header>
+	return (
+		<div className="home-container">
+			<div className="background-columns">
+				{columns.map((column, colIndex) => (
+					<div key={colIndex} className={`image-column col-${colIndex}`}>
+						{column.map((book, index) => (
+							<img key={index} src={book} alt={`Book cover ${index}`} />
+						))}
+					</div>
+				))}
+			</div>
 
-            <section className="features">
-                <img src={book_lilac} alt="Book Image" />
-            </section>
-        </div>
-    );
+			{!isLoggedIn && (
+							<div className="top-right-buttons">
+									<Link to="/login" className="home-btn">Login</Link>
+									<Link to="/register" className="home-btn">Sign Up</Link>
+							</div>
+					)
+					}   
+
+			{/* Main Header */}
+			<header className="home-header">
+					<h1>BookBuddy - Welcome to your next favorite book today</h1>
+					<p>Welcome to our lively haven for book lovers! Track your reading journey, explore personalized recommendations, and fall in love with your next great read.</p>
+			</header>
+
+
+			?
+		</div>
+	);
 };
 
 export default HomePage;

@@ -107,7 +107,7 @@ const SearchResultPage = ({isLoggedIn}) => {
 
   return (
     <div className="search-results-container">
-      <h2 className="search-header">Search for Books</h2>
+      <h2 className="search-header">Ready for your next adventure? Start by searching for a book title!</h2>
       <div className="search-bar">
         <input
           type="text"
@@ -146,7 +146,7 @@ const SearchResultPage = ({isLoggedIn}) => {
           ))}
         </div>
       ) : (
-        <p>Try searching for a book!</p>
+        <p>Your next great read is waiting...</p>
       )}
 
       {/* Review Modal */}

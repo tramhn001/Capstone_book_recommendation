@@ -1,20 +1,26 @@
 /* Recommendation Page Styles */
 .recommendation-page {
-  max-width: 1200px;
   margin: 40px auto;
-  padding: 20px;
+  padding: 80px;
   text-align: center;
-  font-family: Arial, sans-serif;
+  font-family: 'Merriweather', serif;
+  background: linear-gradient(to right, #f6d365, #fda085);
+  margin-top: 60px;
+  position: relative;
+  min-height: 100vh;
+  align-items: center;
+  background: linear-gradient(to right, #f6d365, #fda085);
 }
 
+
 h2 {
-  color: #333;
-  font-size: 2rem;
+  color: #323145;
+  font-size: 2.25rem;
 }
 
 p {
-  font-size: 1rem;
-  color: #666;
+  font-size: 1.75rem;
+  color: #372a41;
 }
 
 .buttons {
