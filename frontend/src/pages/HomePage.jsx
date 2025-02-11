@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../styles/global.css"; 
-// import "../styles/HomePage.css"; 
+import "../styles/HomePage.css"; 
 import bookCovers from "../assets/bookCovers"; 
 
 const shuffleArray = (array) => {
