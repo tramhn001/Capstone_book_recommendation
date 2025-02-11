@@ -97,7 +97,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv("postgresql://bookbuddy_db_8id4_user:hzX7KAfw1TYwCimBsPvKySsw8Blav6V2@dpg-culg2olds78s73br59u0-a.oregon-postgres.render.com/bookbuddy_db_8id4"))
+    'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))
 }
 
 
