@@ -31,7 +31,11 @@ GOOGLE_BOOKS_API_KEY = os.getenv("GOOGLE_BOOKS_API_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = ["bookbuddy.us-east-2.elasticbeanstalk.com", "localhost"]
+ALLOWED_HOSTS = [
+    "capstone-book-recommendation.onrender.com",
+    "bookbuddy-book-recommendation.netlify.app/", 
+    "localhost",
+    "127.0.0.1",]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -145,7 +149,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWS_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Frontend's URL
+    "https://bookbuddy-book-recommendation.netlify.app",  # Frontend's URL
+    "https://capstone-book-recommendation.onrender.com",  # Backend's URL
 ]
 
 CORS_ALLOW_METHODS = [  # Allow all HTTP methods
@@ -164,7 +169,7 @@ CORS_ALLOW_HEADERS = [  # Allow required headers
     "x-requested-with",
 ]
 
-CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]  # Add frontend URL
+CSRF_TRUSTED_ORIGINS = ["https://bookbuddy-book-recommendation.netlify.app"]  # Add frontend URL
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
