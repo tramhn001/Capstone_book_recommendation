@@ -31,7 +31,7 @@ const RegisterForm = () => {
 
 		try {
 			const backendURL = import.meta.env.VITE_APP_BACKEND_URL;
-			const response = await axios.post("${backendURL}/api/user/register/", {
+			const response = await axios.post(`${backendURL}/api/user/register/`, {
 				username,
 				email,
 				password,
@@ -39,7 +39,7 @@ const RegisterForm = () => {
 
 			if (response.status === 201) {
 				// Auto login after registration
-				const loginResponse = await axios.post("${backendURL}/api/token/", {
+				const loginResponse = await axios.post(`${backendURL}/api/token/`, {
 						username: email,
 						password,
 				});
