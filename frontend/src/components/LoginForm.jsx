@@ -4,8 +4,8 @@ import axios from "axios";
 import "../styles/LoginForm.css"; 
 
 const LoginForm = ({ setIsLoggedIn }) => {
-  const [email, setEmail] = useState("test123@gmail.com");
-  const [password, setPassword] = useState("12345");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -40,9 +40,12 @@ const LoginForm = ({ setIsLoggedIn }) => {
       // redirect to the user profile
       navigate("/profile");
     } catch (err) {
-      console.log("Error here");
-      console.log(err);
-      setError(err.response?.data?.detail || "Invalid credentials. Please try again.");
+      if (err.response && err.response.data) {
+        setError(err.response.data.error || "Invalid credentials. Please try again.");
+      } else {
+        setError("Login failed. Please try again.");
+      }
+    } finally {
       setIsLoading(false);
     } 
 };

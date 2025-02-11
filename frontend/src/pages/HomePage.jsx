@@ -43,9 +43,6 @@ const HomePage = () => {
 					<h1>BookBuddy - Welcome to your next favorite book today</h1>
 					<p>Welcome to our lively haven for book lovers! Track your reading journey, explore personalized recommendations, and fall in love with your next great read.</p>
 			</header>
-
-
-			?
 		</div>
 	);
 };

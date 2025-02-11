@@ -37,7 +37,7 @@ class LoginView(APIView):
                 "username": user.username
             })
         else:
-            return Response({"error": "Invalid credentials"}, status=401)   
+            return Response({"error": "Invalid credentials. Please try again."}, status=401)   
         
 # User registration
 class CreateUserView(generics.CreateAPIView):
@@ -133,7 +133,9 @@ class AddToReadListView(APIView):
                          "review": review,
                          "genre":genre}
         
+        
         serializer = ReadListSerializer(data=filtered_data)
+        print(serializer.is_valid())
 
         if serializer.is_valid():
             serializer.save()
@@ -304,7 +306,7 @@ class RecommendationByAuthorView(APIView):
                         description = volume_info.get("description"),
                         cover_image = volume_info.get("imageLinks", {}).get("thumbnail"),
                     )
-                recommended_books.append(recommended_book)
+                    recommended_books.append(recommended_book)
 
             recommendation, created = RecommendationByAuthor.objects.get_or_create(user=user, author=author)
 

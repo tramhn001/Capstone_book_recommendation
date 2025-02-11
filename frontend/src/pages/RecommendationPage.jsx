@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import "../styles/RecommendationPage.css";
 import axios from "axios";
@@ -33,7 +34,6 @@ const RecommendationPage = ({ isLoggedIn }) => {
       setRecommendationByGenre(response_rec_genre.data.recommendations_by_genre || {});
       setRecommendationByAuthor(response_rec_author.data.recommendations_by_author || {});
     } catch (err) {
-      console.log(err);
       setError("Failed to fetch recommendations. Please try again.");
     } finally {
       setIsLoading(false);
@@ -63,17 +63,21 @@ const RecommendationPage = ({ isLoggedIn }) => {
                 <h4>{genre}</h4>
                 <div className="book-list">
                   {books.map((book) => (
-                    <div key={book.id} className="book-card">
+                    <div key={book.id} className="book-item">
                       <img src={book.thumbnail} alt={book.title} className="book-cover" />
-                      <h4>{book.title}</h4>
-                      <p>by {book.authors}</p>
+                      <div className="book-info">
+                        <h4>{book.title}</h4>
+                        <p>by {book.authors}</p>
+                        <p>{book.publishedDate || "Unknown Date"}</p>
+                        <p>{book.description?.substring(0, 100) || "No Description Available"}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
             ))
           ) : (
-            <p>No genre recommendations yet. Try adding more books to your list!</p>
+            <p>Click ‘Get Recommendations’ to discover personalized book suggestions based on your favorite genres!</p>
           )}
         </div>
 
@@ -86,17 +90,21 @@ const RecommendationPage = ({ isLoggedIn }) => {
                 <h4>{author}</h4>
                 <div className="book-list">
                   {books.map((book) => (
-                    <div key={book.id} className="book-card">
+                    <div key={book.id} className="book-item">
                       <img src={book.thumbnail} alt={book.title} className="book-cover" />
-                      <h4>{book.title}</h4>
-                      <p>by {book.authors}</p>
+                      <div className="book-info">
+                        <h4>{book.title}</h4>
+                        <p>by {book.authors}</p>
+                        <p>{book.publishedDate || "Unknown Date"}</p>
+                        <p>{book.description?.substring(0, 100) || "No Description Available"}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
             ))
           ) : (
-            <p>No author recommendations yet. Try adding more books to your list!</p>
+            <p>Explore books curated just for you—get recommendations based on your favorite authors!</p>
           )}
         </div>
       </div>

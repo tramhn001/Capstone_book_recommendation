@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import "../styles/SearchResultPage.css";
 
 const SearchResultPage = ({isLoggedIn}) => {
-  console.log("Is user logged in?", isLoggedIn);
-
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [error, setError] = useState("");
@@ -51,7 +49,6 @@ const SearchResultPage = ({isLoggedIn}) => {
 
   const addToReadList = async () => {
     if (!selectedBook) return;
-    console.log(selectedBook);
     
     const author = selectedBook.volumeInfo?.authors?.join(", ") || "Unknown Authors";
     const payload = { book_id: selectedBook.id,
@@ -64,7 +61,6 @@ const SearchResultPage = ({isLoggedIn}) => {
                       genre: selectedBook.volumeInfo?.categories?.join(',') || "Unknown Genres"
     }
     try {
-      console.log(payload);
       await axios.post(
         "http://localhost:8000/api/user/lists/read/add/",
         {payload},
@@ -75,7 +71,6 @@ const SearchResultPage = ({isLoggedIn}) => {
       alert("Book added to Read List successfully!");
       closeReviewModal();
     } catch (err) {
-      console.log(err);
       setError("Failed to add book to Read List. Please try again.");
     }
   };
@@ -89,7 +84,6 @@ const SearchResultPage = ({isLoggedIn}) => {
                       thumbnail: book.volumeInfo?.imageLinks?.thumbnail || "https://via.placeholder.com/128x193.png?text=No+Image",
                       genre: book.volumeInfo?.categories?.join(',') || "Unknown Genres"
                     }
-    console.log(payload);                      
     try {
       await axios.post(
         "http://localhost:8000/api/user/lists/want-to-read/add/",
@@ -100,7 +94,6 @@ const SearchResultPage = ({isLoggedIn}) => {
       );
       alert("Book added to Want-to-Read List successfully!");
     } catch (err) {
-      console.error(err);
       setError("Failed to add book to Want-to-Read List. Please try again.");
     }
   };

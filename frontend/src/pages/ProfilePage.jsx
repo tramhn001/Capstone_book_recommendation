@@ -29,11 +29,9 @@ const ProfilePage = () => {
 					Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
 				},
 			});
-			console.log(response.data)
 			setReadList(response.data.read_list);
 			setWantToReadList(response.data.want_to_read_list);			
 	} catch (err) {
-			console.log(err);
 			setError("Failed to fetch lists. Please try again.");
 		}
   };
