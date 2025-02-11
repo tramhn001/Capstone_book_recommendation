@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "../styles/global.css"; // Ensure your global styles are imported
-import "../styles/Homepage.css"; // Import your homepage-specific styles
-import bookCovers from "../assets/bookCovers"; // Adjust the path as necessary
+import "../styles/global.css"; 
+// import "../styles/HomePage.css"; 
+import bookCovers from "../assets/bookCovers"; 
 
 const shuffleArray = (array) => {
 	return array.map(value => ({ value, sort: Math.random() }))

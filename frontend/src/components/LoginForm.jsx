@@ -31,7 +31,6 @@ const LoginForm = ({ setIsLoggedIn }) => {
 
       // Extract tokens from response
       const { access, refresh } = response.data;
-      console.log(response.data); 
       // save token in localStorage
       localStorage.setItem("accessToken", access);
       localStorage.setItem("refreshToken", refresh);
