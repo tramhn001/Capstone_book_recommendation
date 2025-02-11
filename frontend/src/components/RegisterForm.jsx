@@ -12,6 +12,7 @@ const RegisterForm = () => {
 	const [isLoading, setIsLoading] = React.useState(false);
 	const navigate = useNavigate();
 
+	const backendURL = import.meta.env.VITE_APP_BACKEND_URL;
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		setError("");
@@ -30,7 +31,6 @@ const RegisterForm = () => {
 		setError("");
 
 		try {
-			const backendURL = import.meta.env.VITE_APP_BACKEND_URL;
 			const response = await axios.post(`${backendURL}/api/user/register/`, {
 				username,
 				email,
