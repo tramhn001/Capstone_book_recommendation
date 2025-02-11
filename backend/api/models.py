@@ -71,10 +71,3 @@ class RecommendationByAuthor(models.Model):
     def __str__(self):
         return f"Recommendations for {self.user.username} by author {self.author}"
 
-# class Recommendation(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     by_genre = models.OneToManyField(RecommendationByGenre)
-#     by_author = models.OneToManyField(RecommendationByAuthor)
-    
-#     def __str__(self):
-#         return f"Recommendations for {self.user.username}"

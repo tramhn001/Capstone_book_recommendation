@@ -81,16 +81,6 @@ class WantToReadListSerializer(serializers.ModelSerializer):
                   "thumbnail",
                   "genre"]
     
-# class RecommendationSerializer(serializers.ModelSerializer):
-#     # recommended_books = BookSerializer(many=True, read_only=True) # Nested serializer to include book details   
-
-#     class Meta:
-#         model = Recommendation
-#         fields = ["user",
-#                   "genre",
-#                   "recommended_books"]
-        
-
 class RecommendationByGenreSerializer(serializers.ModelSerializer):
     recommended_books = BookSerializer(many=True, read_only=True)
 

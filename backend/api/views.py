@@ -38,34 +38,30 @@ class LoginView(APIView):
             })
         else:
             return Response({"error": "Invalid credentials"}, status=401)   
-    
-@api_view(["POST"])
-def user_register(request):
-    data = request.data
-
-    # Ensure all required fields are provided
-    required_fields = ["username", "email", "password"]
-    for field in required_fields:
-        if not data.get(field):
-            return Response({"error": f"{field} is required"}, status=400)
         
-    # Check if user already exists
-    if User.objects.filter(username=data.get("username")).exists():
-        return Response({"error": "User already taken"}, status=400)
-    
-    if User.objects.filter(email=data.get("email")).exists():
-        return Response({"error": "Email already registered"}, status=400)
-    
-    try:
-        user = User.objects.create_user(
-            username=data.get("username"),
-            email=data.get("email"),
-            password=data.get("password")
-        )
+# User registration
+class CreateUserView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
 
-        return Response({"message": "User registered successfully"}, status=201)
-    except Exception as e:
-        return Response({"error": str(e)}, status=500)
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        required_fields = ["username", "email", "password"]
+        
+        # Ensure all required fields are provided
+        for field in required_fields:
+            if not data.get(field):
+                return Response({"error": f"{field} is required"}, status=400)
+
+        # Check if user already exists
+        if User.objects.filter(username=data.get("username")).exists():
+            return Response({"error": "Username is already taken"}, status=400)
+
+        if User.objects.filter(email=data.get("email")).exists():
+            return Response({"error": "Email is already registered"}, status=400)
+
+        return super().create(request, *args, **kwargs)
 
 # View for searching book
 class GoogleBooksSearchView(APIView):
@@ -331,10 +327,6 @@ class RecommendationByAuthorView(APIView):
             "recommendations_by_author": author_recommendations
         })
     
-# User registration
-class CreateUserView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [AllowAny]
+
 
 

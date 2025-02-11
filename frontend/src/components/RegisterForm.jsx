@@ -49,7 +49,11 @@ const RegisterForm = () => {
 				navigate("/profile"); // Redirect to profile page after successful registration and login
 			}
 		} catch (err) {
-			setError(err.response?.data?.detail || "Registration failed. Please try again.");
+			if (err.response && err.response.data) {
+				setError(err.response.data.error || "Registration failed. Please try again.");
+			} else {
+				setError("Registration failed. Please try again.");
+			}
 		} finally {
 			setIsLoading(false);
 		}
