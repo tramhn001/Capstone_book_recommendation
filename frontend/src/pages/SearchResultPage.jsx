@@ -47,6 +47,8 @@ const SearchResultPage = ({isLoggedIn}) => {
     setFinishedDate("");
   };
 
+  const backendURL = import.meta.env.VITE_APP_BACKEND_URL;
+
   const addToReadList = async () => {
     if (!selectedBook) return;
     
@@ -62,7 +64,7 @@ const SearchResultPage = ({isLoggedIn}) => {
     }
     try {
       await axios.post(
-        "http://localhost:8000/api/user/lists/read/add/",
+        `${backendURL}/api/user/lists/read/add/`,
         {payload},
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
@@ -86,7 +88,7 @@ const SearchResultPage = ({isLoggedIn}) => {
                     }
     try {
       await axios.post(
-        "http://localhost:8000/api/user/lists/want-to-read/add/",
+        `${backendURL}/api/user/lists/want-to-read/add/`,
         {payload},
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },

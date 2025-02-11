@@ -14,8 +14,9 @@ const RecommendationPage = ({ isLoggedIn }) => {
     setError("");
 
     try {
+      const backendURL = import.meta.env.VITE_APP_BACKEND_URL;
       const response_rec_genre = await axios.get(
-        `http://localhost:8000/api/user/lists/recommendations/genre/`,
+        `${backendURL}/api/user/lists/recommendations/genre/`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -23,7 +24,7 @@ const RecommendationPage = ({ isLoggedIn }) => {
         }
       );
       const response_rec_author = await axios.get(
-        `http://localhost:8000/api/user/lists/recommendations/author/`,
+        `${backendURL}/api/user/lists/recommendations/author/`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,

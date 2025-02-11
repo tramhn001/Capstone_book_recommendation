@@ -21,10 +21,11 @@ const ProfilePage = () => {
 		}
   }, [navigate]);
 
+	const backendURL = import.meta.env.VITE_APP_BACKEND_URL;
   // Fetch user's Read List and Want-to-Read List
   const fetchUserLists = async () => {
 		try {
-			const response = await axios.get("http://localhost:8000/api/user/lists/", {
+			const response = await axios.get(`${backendURL}/api/user/lists/`, {
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
 				},
@@ -40,7 +41,7 @@ const ProfilePage = () => {
     const confirmDelete = window.confirm(`Are you sure you want to remove this book from ${listType === "read" ? "Read" : "Want-to-Read"} list?`);
     if (!confirmDelete) return;
     try {
-      await axios.delete(`http://localhost:8000/api/user/lists/${listType}/remove/${bookId}/`, {
+      await axios.delete(`${backendURL}/api/user/lists/${listType}/remove/${bookId}/`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
