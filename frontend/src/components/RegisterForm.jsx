@@ -1,6 +1,7 @@
 import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../styles/RegisterForm.css";
 
 const RegisterForm = () => {
@@ -122,7 +123,7 @@ const RegisterForm = () => {
 				</button>
 			</form>
 			<p>
-				Already have an account? <a href="/login">Login here</a>.
+				Already have an account? <Link to="/login">Login here</Link>.
 			</p>
 		</div>
 	);
