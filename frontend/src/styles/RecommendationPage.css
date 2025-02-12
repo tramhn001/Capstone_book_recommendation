@@ -51,8 +51,6 @@ button:hover {
 .recommendation-container {
   display: flex;
   align-items: center;
-  margin-top: 0;
-  gap: 20px;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
