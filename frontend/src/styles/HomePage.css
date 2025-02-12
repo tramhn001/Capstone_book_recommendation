@@ -11,7 +11,7 @@ body, html {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     background: linear-gradient(to right, #f6d365, #fda085);
     font-family: 'Merriweather', serif;
     padding: 0;
